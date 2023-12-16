@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import SearchJob from './pages/SearchJob';
 import SpecializationsPage from './pages/SpecializationsPage';
+import SpecializationDetailsPage from './pages/SpecializationDetailsPage';
 function App() {
   return (
     <div className="App">
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/searchjob" element={<SearchJob />} />
         <Route path="/specializations/:industry" element={<SpecializationsPage />} />
+        <Route path="/specializationdetails/:spec" element={<SpecializationDetailsPage />} />
       </Routes>
 
       
