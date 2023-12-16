@@ -1,4 +1,5 @@
 import '../App.css';
+import BrowseJobsTab from '../components/BrowseJobsTab';
 import IndustryList from '../components/IndustryList';
 function HomePage(){
 
@@ -16,11 +17,16 @@ function HomePage(){
             <h1 className="text-4xl font-semibold ml-24 mt-12">Find a Career Path</h1>
             <IndustryList />
         </div>
-        <div>
-            <h1 className="text-4xl font-semibold ml-24 mt-12">Browse Jobs</h1>
+        <div className="ml-24 mt-12">
+            <h1 className="text-4xl font-semibold ">Browse Jobs</h1>
+            <BrowseJobsTab />
         </div>
-        <div>
-            <h1 className="text-4xl font-semibold ml-24 mt-12">Recruting?</h1>
+        <div className="flex items-center gap-10 mb-16">
+            <div className="ml-24 mt-12 w-2/3 ">
+            <h1 className="text-4xl font-semibold">Recruting?</h1>
+            <p className="mt-8">Our robust recruitment platform simplifies job posting and streamlines application tracking, offering a user-friendly experience for employers and applicants alike.</p>
+            </div>
+            <button className="h-fit mt-4 px-4 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500">Start Recruting</button>
         </div>
     </main>
     );
