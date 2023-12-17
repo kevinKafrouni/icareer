@@ -11,7 +11,7 @@ function SpecializationDetailsPage(){
            </header>
            <div className="ml-24 mr-24">
                 <h1 className="text-3xl font-semibold mb-8">Skills Needed to succeed in this career Path</h1>
-           <SkillsList />
+                <SkillsList />
            </div>
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Become an expert With our Learning Path</h1>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function IndustryCard2(props) {
+function IndustryCard(props) {
     const imageUrl = props.image;
   
     return (
@@ -21,5 +21,5 @@ function IndustryCard2(props) {
     );
   }
   
-  export default IndustryCard2;
+  export default IndustryCard;
   

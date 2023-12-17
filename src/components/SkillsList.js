@@ -6,7 +6,6 @@ function SkillsList(){
         setActiveAccordion(activeAccordion==id?null:id);
       }
     return(
-                
         <div id="accordion" data-accordion="collapse" data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white">
         <h2 id="accordion-heading-1">
             <button type="button" 

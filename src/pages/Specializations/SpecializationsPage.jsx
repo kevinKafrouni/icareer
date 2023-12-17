@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import SpecializationGrid from "../components/SpecializationsGrid";
+import SpecializationGrid from "./SpecializationsGrid";
 function SpecializationPage(){
 
     const { industry } = useParams();

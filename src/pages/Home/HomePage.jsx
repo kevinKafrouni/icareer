@@ -1,6 +1,6 @@
-import '../App.css';
-import BrowseJobsTab from '../components/BrowseJobsTab';
-import IndustryList from '../components/IndustryList';
+
+import BrowseJobsTab from './BrowseJobsTab';
+import IndustryList from './IndustryList';
 function HomePage(){
 
     return(
