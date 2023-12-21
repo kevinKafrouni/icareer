@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 function IndustryCard(props) {
     const imageUrl = props.image;
-  
     return (
       <Link to={`/specializations/${props.id}`}>
       <div className="max-w-sm h-64 w-64 relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

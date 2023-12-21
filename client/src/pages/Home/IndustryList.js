@@ -10,12 +10,14 @@ function IndustryList(){
             try{
                 const res = await axios.get("http://localhost:8000/industries")
                 setIndustries(res.data)
+                
             }catch(err){
                 console.log(err)
             }
         }
         fetchIndustries();
     },[])
+    console.log(industries)
     return(
         <div className="flex flex-col bg-white m-auto p-auto mt-12">
             <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
