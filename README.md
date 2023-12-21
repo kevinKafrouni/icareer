@@ -2,6 +2,14 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## installed packages
+### start with : npm install
+npm i react-router-dom
+npm i express mysql nodemon
+npm i cors
+npm i axios
+
 ## Available Scripts
 
 In the project directory, you can run:

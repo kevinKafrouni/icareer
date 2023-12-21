@@ -1,7 +1,21 @@
 
+import { useEffect, useState } from "react";
 import IndustryCard from "./IndustryCard";
+import axios from "axios";
 function IndustryList(){
+    const [industries,setIndustries] = useState([]);
 
+    useEffect(()=>{
+        const fetchIndustries = async ()=>{
+            try{
+                const res = await axios.get("http://localhost:3000")
+                console.log(res)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchIndustries();
+    },[])
     return(
         <div className="flex flex-col bg-white m-auto p-auto mt-12">
             <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">

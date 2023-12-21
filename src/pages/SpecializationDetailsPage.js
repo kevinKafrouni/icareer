@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import SkillsList from "../components/SkillsList";
 import Roadmap from "../components/Roadmap";
+import CompaniesList from "../components/CompaniesList";
 function SpecializationDetailsPage(){
     const { spec } = useParams();
     return(
@@ -16,6 +17,14 @@ function SpecializationDetailsPage(){
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Become an expert With our Learning Path</h1>
            </div>
+           <div className="ml-24 mr-24 mt-24">
+                <h1 className="text-3xl font-semibold mb-8">Top Companies</h1>
+                <CompaniesList />
+           </div>
+           <div className="ml-24 mr-24 mt-24">
+                <h1 className="text-3xl font-semibold mb-8">Latest Jobs</h1>
+           </div>
+           
         </div>
     );
 }
