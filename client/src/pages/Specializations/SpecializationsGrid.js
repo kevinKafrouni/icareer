@@ -20,6 +20,7 @@ function SpecializationGrid(props){
         <div className="flex flex-wrap gap-4 justify-center">
             {specs.map(spec =>(
                 <SpecializationCard
+                id={spec.spec_id}
                 title={spec.spec_name}
                 description={spec.spec_description}
                 image={spec.spec_image}

@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/searchjob" element={<SearchJob />} />
         <Route path="/specializations/:industry" element={<SpecializationsPage />} />
-        <Route path="/specializationdetails/:spec" element={<SpecializationDetailsPage />} />
+        <Route path="/specializationdetails/:specid" element={<SpecializationDetailsPage />} />
         <Route path="/auth/:type" element={<LoginRegister />} />
       </Routes>
       

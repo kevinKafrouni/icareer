@@ -1,83 +1,206 @@
-import { Link } from "react-router-dom";
-import { useState,useRef,useEffect } from "react";
-
-const USER_REGEX = /^[a-zA-Z ]+$/;
-const PASS_REGEX = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-
+import { Link, useNavigate } from "react-router-dom";
+import { useState} from "react";
+import FormInput from "../../components/ui/FormInput";
+import axios from 'axios'
 function RegisterForm(){
+  const navigate = useNavigate();
 
-  const userRef = useRef();
-  const errorRef = useRef();
+  const [type,setType] = useState('user');
 
-  const [firstName,setFirstName] = useState('');
-  const [validFname,setValidFname] = useState(false);
+  const changeType = (type)=>{
+    setType(type);
+  }
 
-  const [lastName,setLastName] = useState('');
-  const [validLname,setValidLname] = useState(false);
+  const [values,setValues] = useState({
+      first_name:"",
+      last_name:"",
+      birthday:"",
+      email:"",
+      pdf_cv:"",
+      location_id:"",
+      password:""
+  })
 
-  const [birthDate,setBirthDate] = useState('');
-  const [validBdate,setValidBdate] = useState(false);
+  const [recVal,setRecVal] = useState({
+    company_name:"",
+    company_description:"",
+    company_logo:"",
+    company_mail:"",
+    password:"",
+    phone_number:""
+  })
 
-  const [email,setemail] = useState('');
-  const [validEmail,setValidEmail] = useState(false);
 
-  const [password,setPassword] = useState('');
-  const [validPassword,setValidPassword] = useState(false);
+const inputs =[
+    {
+        id:1,
+        name:"first_name",
+        type:"text",
+        errmsg:"name should be 3-16 character long",
+        placeholder:"first name",
+        pattern:"^[A-Za-z0-9]{3,16}$",
+        required:true
+    },
+    {
+        id:2,
+        name:"last_name",
+        type:"text",
+        errmsg:"name should be 3-16 character long",
+        placeholder:"last name",
+        pattern:"^[A-Za-z0-9]{3,16}$",
+        required:true
+    },
+    {
+        id:3,
+        name:"birthday",
+        type:"date",
+        placeholder:"birthday",
+    },
+    {
+        id:4,
+        name:"email",
+        type:"email",
+        errmsg:"invalid email",
+        placeholder:"email",
+        required:true
+    },
+    {
+        id:5,
+        name:"password",
+        type:"password",
+        errmsg:"password should be 6-20 characters",
+        placeholder:"password",
+        pattern:"^[A-Za-z0-9]{6,20}$",
+        required:true
+    },
+    {
+        id:6,
+        name:"location_id",
+        type:"select",
+        placeholder:"Your Location",
+        options:[
+          {value:1, label:"beirut"},
+          {value:2, label:"jdeide"},
+          {value:3, label:"jamhour"}
+        ]  
+      }
+]
 
-  const [matchPass,setMatchPass] = useState('');
-  const [validMatchPass,setValidMatchPass] = useState(false);
+const recruterInputs =[
+  {
+    id:1,
+    name:"company_name",
+    type:"text",
+    errmsg:"name should be 3-16 character long",
+    placeholder:"Company Name",
+    pattern:"^[A-Za-z0-9]{3,16}$",
+    required:true
+},{
+  id:2,
+  name:"company_logo",
+  type:"file",
+  placeholder:"Company Logo",
+},{
+  id:3,
+  name:"company_mail",
+  type:"email",
+  errmsg:"invalid email",
+  placeholder:"email",
+  required:true
+},{
+  id:4,
+  name:"password",
+  type:"password",
+  errmsg:"password should be 6-20 characters",
+  placeholder:"password",
+  pattern:"^[A-Za-z0-9]{6,20}$",
+  required:true
+},{
+  id:5,
+  name:"phone_number",
+  type:"text",
+  errmsg:"invalid phone_number",
+  placeholder:"phone number",
+  required:true
+},{
+  id:6,
+  name:"location_id",
+  type:"select",
+  placeholder:"Your Location",
+  options:[
+    {value:1, label:"beirut"},
+    {value:2, label:"jdeide"},
+    {value:3, label:"jamhour"}
+  ]  
+}
+]
+  
+  const handleChange = (e)=>{
+    if(type==="company"){
+      if(e.target.type==="file"){
+        const file = e.target.files[0];
+        const filename = `${Date.now()}-${file.name}`;
+        setRecVal({...recVal,[e.target.name]: filename })
+      }else{
+        setRecVal({...recVal,[e.target.name]: e.target.value })
+      }
+      console.log(recVal);
+    }else{
+      setValues({...values,[e.target.name]: e.target.value })
+    }
 
-  const [errorMsg,setErrorMsg] = useState('');
-  const [success,setSuccess] = useState(false);
+  }
 
-  useEffect(()=>{
-    const result = USER_REGEX.test(firstName);
-    console.log(result);
-    console.log(firstName);
-    setValidFname(result);
-  },[firstName]);
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    if(type==="user"){    
+      try{
+        const res = await axios.post('http://localhost:8000/register/user',values);
+        navigate("/auth/login?suc=true")
+      }catch(err){
+        console.log(err);
+      }
+  }else{
+    try{
+      const res = await axios.post('http://localhost:8000/register/company',recVal);
+      navigate("/auth/login?suc=true")
+    }catch(err){
+      console.log(err);
+    }
+  }
+  }
 
-  useEffect(()=>{
-    const result = PASS_REGEX.test(password);
-    console.log(result);
-    console.log(password);
-    setValidPassword(result);
-    const match = password ===matchPass
-    setValidMatchPass(match)
-  },[password,matchPass]);
-
-  useEffect(()=>{
-    setErrorMsg('');
-  },[firstName,password,matchPass]);
+  
     return(
         
-        <div className="md:w-1/3 max-w-sm">
+        <div className="md:w-1/3 max-w-sm ">
+          <h1 className="text-3xl mt-24">Register As </h1>
+          <div className="flex gap-4">
+            <button className={`mt-4 ${type==="user"?"bg-blue-600 text-white":"bg-gray-100"} hover:bg-blue-600 px-4 py-2 uppercase rounded text-xs tracking-wider font-semibold`}
+                    onClick={()=>changeType('user')}
+            >Job Seeker</button>
+            <button className={`mt-4 ${type==="company"?"bg-blue-600 text-white":"bg-gray-100"} hover:bg-blue-600 px-4 py-2 uppercase rounded text-xs tracking-wider font-semibold`}
+                    onClick={()=>changeType('company')}
+            >Recruter</button>
+          </div>
             <div className="text-center md:text-left">
                 <label className="mr-1">Create an account</label>
             </div>
-            <p ref={errorRef} className={success?"hidden":""} >{errorMsg}</p>
-            <form>
-          <input 
-                 id="firstname"
-                 ref={userRef}
-                 autoComplete="off"
-                 onChange={(e)=>setFirstName(e.target.value)}
-                 className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" 
-                 type="text" 
-                 placeholder="Fist Name"
-           />
-          <input className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" type="text" placeholder="Last Name" />
-          <input className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" type="date" placeholder="Birth Date"/>
-          <input className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" type="text" placeholder="Email Address" />
-          <input className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" type="password" placeholder="Password" />
-          <input className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4" type="password" placeholder="Verify Password" />
+        <form onSubmit={handleSubmit}>
+          
+            {type==="company"? recruterInputs.map(input=>(
+              <FormInput key={input.id} {...input} value={values[input.name]} onChange={handleChange}/>
+          ))
+              :
+            inputs.map(input=>(
+                <FormInput key={input.id} {...input} value={values[input.name]} onChange={handleChange}/>
+            ))}
+
           <div className="mt-4 flex justify-between font-semibold text-sm">
-            
           </div>
           <div className="text-center md:text-left">
             <button className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider" 
                     type="submit"
-                    disabled={!validFname || !validPassword || !validEmail? true:false}
                     >Register</button>
           </div>
           </form>
