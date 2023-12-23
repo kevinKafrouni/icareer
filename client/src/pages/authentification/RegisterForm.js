@@ -25,7 +25,7 @@ function RegisterForm(){
     company_name:"",
     company_description:"",
     company_logo:"",
-    company_mail:"",
+    email:"",
     password:"",
     phone_number:""
   })
@@ -102,7 +102,7 @@ const recruterInputs =[
   placeholder:"Company Logo",
 },{
   id:3,
-  name:"company_mail",
+  name:"email",
   type:"email",
   errmsg:"invalid email",
   placeholder:"email",

@@ -1,9 +1,29 @@
 import {Link} from 'react-router-dom'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import axios from 'axios';
 import UserIcon from './ui/UserIcon';
 function Navbar(){
 
-    const [isLoggedin, setIsLoggedin] = useState(true);
+    const [isLoggedin, setIsLoggedin] = useState(false);
+    const [userInfo, setUserInfo] = useState({ name: '', email: '',logo:'' });
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+          try {
+            const res = await axios.get('http://localhost:8000/checklogin');
+            if (res.data.isLoggedIn) {
+              setIsLoggedin(true);
+              setUserInfo({ name: res.data.name, email: res.data.email ,logo:'' });
+            } else {
+                setIsLoggedin(false);
+            }
+          } catch (error) {
+            console.error('Error checking login status:', error);
+          }
+        };
+    
+        checkLoginStatus();
+      }, []);
+    
     return(
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -18,8 +38,8 @@ function Navbar(){
     </div>
     :
     <UserIcon 
-        name="kevin"
-        email="kevin@gmail.com"
+        name={userInfo.name}
+        email={userInfo.email}
         image="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     />
     }

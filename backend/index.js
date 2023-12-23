@@ -1,7 +1,22 @@
 import express from "express"
 import mysql from "mysql2"
 import cors from "cors"
+import session from "express-session"
+import cookieParser from "cookie-parser"
+import bodyParser from "body-parser"
 const app = express()
+
+app.use(session({
+    secret:"kevinkey",
+    resave:false,
+    saveUninitialized:false,
+    cookie: {
+        secure: false, 
+        httpOnly: true, 
+        maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 1 day (in milliseconds)
+        sameSite: 'strict', 
+      },
+}))
 
 const db = mysql.createConnection({
     host:"localhost",
@@ -11,7 +26,8 @@ const db = mysql.createConnection({
 })
 app.use(express.json());
 app.use(cors());
-
+app.use(cookieParser());
+app.use(bodyParser.json());
 /*working with industries*/
 app.get("/industries",(req,res)=>{
     const industryId = req.query.industryId;
@@ -93,7 +109,55 @@ app.post("/register/company",(req,res)=>{
     })
 })
 
+/*check login*/
+app.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    // Check the provided credentials against the user table in the database
+    const userQuery = "SELECT first_name, last_name, email FROM user WHERE email = ? AND password = ? LIMIT 1";
+    db.query(userQuery, [email, password], (err, data) => {
+      if (err) return res.json(err);
+      if (data.length === 1) {
+        req.session.user = data;
+        return res.json({type:"user",data});
+      } else {
+        const companyQuery = "SELECT company_name,email,company_logo FROM company WHERE email = ? AND password = ? LIMIT 1";
+        db.query(companyQuery, [email, password], (companyerr, companydata) => {
+          if (companyerr) {
+            console.log(companyerr);
+            return res.json(companyerr);
+          }
+          if (companydata.length === 1) {
+            req.session.company = companydata;
+            
+            return res.json({ type: "company", companydata });
+          } else {
+            return res.json(err);
+          }
+        });
+      }
+    });
+  });
 
+
+
+  app.get('/checklogin', (req, res) => {
+    if (req.session && req.session.user) {
+        console.log("yes");
+      const { name, email,logo } = req.session.user;
+      res.json({ isLoggedIn: true,name,email });
+
+    } else if(req.session && req.session.company){
+        console.log("comp");
+        const { name, email,logo} = req.session.user;
+        res.json({ isLoggedIn: true,name,email});
+    }else{
+        console.log(req.session);
+        console.log(req.session.user);
+        console.log("false");
+        res.json({ isLoggedIn: false });
+    }
+  });
+  
 app.listen(8000,()=>{
     console.log("connected to backend");
 })
