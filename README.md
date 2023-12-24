@@ -2,6 +2,7 @@
 
 ## start the backend so we can fetch the data later
 - cd backend
+- npm i express nodemon mysql2 cors express-session body-parser cookie-parser
 - npm start 
 
 ## setup the react app
