@@ -142,7 +142,6 @@ app.post("/login", (req, res) => {
 /*check if user is logged in*/
   app.get('/checklogin', (req, res) => {
     if (req.session && req.session.user) {
-        console.log("yes");
       const { name, email,logo } = req.session.user;
       res.json({ isLoggedIn: true,name,email });
 
@@ -151,9 +150,6 @@ app.post("/login", (req, res) => {
         const { name, email,logo} = req.session.user;
         res.json({ isLoggedIn: true,name,email});
     }else{
-        console.log(req.session);
-        console.log(req.session.user);
-        console.log("false");
         res.json({ isLoggedIn: false });
     }
   });
@@ -162,7 +158,7 @@ app.post("/login", (req, res) => {
   /*get job application possible statuses*/
 
   app.get('/statuslist',(req,res)=>{
-    const q = "SELECT app_status_id as 'id',app_status_name as 'title' FROM application_status"
+    const q = "SELECT app_status_id as 'id',app_status_name as 'title' FROM application_status WHERE app_status_id !=5"
     db.query(q,(err,data)=>{
       if(err) return res.json(err);
       return res.json(data);
@@ -172,8 +168,8 @@ app.post("/login", (req, res) => {
   /*get all aplication for a given job */
 
   app.get('/jobapplications',(req,res)=>{
-    const jobid = 1;
-    const q = "SELECT application_id,first_name,last_name,email,pdf_cv,app_status_name as 'status' FROM job_applications natural join user natural join jobs natural join application_status WHERE job_id=?"
+    const jobid = req.query.jobid;//get this from the clicked job
+    const q = "SELECT application_id,first_name,last_name,email,pdf_cv,app_status_id,app_status_name as 'status' FROM job_applications natural join user natural join jobs natural join application_status WHERE job_id=?"
 
     db.query(q,[jobid],(err,data)=>{
       if(err) return res.json(err);
@@ -181,11 +177,27 @@ app.post("/login", (req, res) => {
     })
   })
 
+
   /*change an application status  */
   app.post('/jobapp/changestatus',(req,res)=>{
-    const [appid,status] = req.body;
-    console.log(appid + status);
-    const q = ""
+    const {id,statid} = req.body;
+    const q = "UPDATE job_applications SET app_status_id=? ,status_change_date=NOW() WHERE application_id=?"
+    db.query(q,[statid,id],(err,result)=>{
+      if(err) return res.json(err);
+      return res.json(result);
+    })
+    
+  })
+
+  /*get the jobs posted by the current loged recruter */
+  app.get('/jobsposted',(req,res)=>{
+    const recruterid = 1;//get this id from the logged user session
+    const q = "SELECT job_id,job_title,DATE_FORMAT(job_close_date, '%d-%m-%Y') as 'close_date',DATE_FORMAT(job_posted_date, '%d-%m-%Y') as 'post_date',spec_name FROM jobs NATURAL JOIN specialization WHERE company_id=?"
+
+    db.query(q,[recruterid],(err,data)=>{
+      if(err) return res.json(err)
+      return res.json(data);
+    })
   })
   
 app.listen(8000,()=>{

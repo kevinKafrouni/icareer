@@ -8,6 +8,7 @@ import SpecializationsPage from './pages/Specializations/SpecializationsPage';
 import SpecializationDetailsPage from './pages/SpecializationDetailsPage';
 import LoginRegister from './pages/authentification/LoginRegister';
 import ManageJobsPage from './pages/recruter/ManageJobsPage';
+import ApplicationsDashboard from './pages/recruter/ApplicationsDashboard';
 function App() {
   return (
     <div className="App">
@@ -20,6 +21,7 @@ function App() {
         <Route path="/specializationdetails/:specid" element={<SpecializationDetailsPage />} />
         <Route path="/auth/:type" element={<LoginRegister />} />
         <Route path="/applications" element={<ManageJobsPage />}/>
+        <Route path='/board/:jobid' element={<ApplicationsDashboard/>}/>
       </Routes>
       
     </div>

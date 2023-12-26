@@ -1,77 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import Task from './Task'
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
 export default function ApplicationsDashboard() {
 
-    const [tasks,setTasks] = useState([
-        {
-            application_id: 1,
-            email: "admin@gmail.com",
-            first_name: "kek",
-            last_name: "skjbf",
-            pdf_cv: "",
-            status: "new application"
-        },
-        {
-            application_id: 2,
-            email: "admin@gmail.com",
-            first_name: "kek",
-            last_name: "skjbf",
-            pdf_cv: "",
-            status: "new application"
-        },
-        {
-            application_id: 3,
-            email: "admin@gmail.com",
-            first_name: "kek",
-            last_name: "skjbf",
-            pdf_cv: "",
-            status: "new application"
-        },{
-            application_id: 4,
-            email: "admin@gmail.com",
-            first_name: "kek",
-            last_name: "skjbf",
-            pdf_cv: "",
-            status: "under review"
-        }
-    ]);
+    const {jobid} = useParams();
+    const [tasks,setTasks] = useState([]);
 
     const [statuses,setStatuses] = useState([]);
     useEffect(()=>{
         const fetchStatusList = async ()=>{
             const res = await axios.get("http://localhost:8000/statuslist");
-            const stlist = res.data.map(arr =>(arr.title))
-            setStatuses(stlist);
+            setStatuses(res.data);
         }
         fetchStatusList();
     },[])
 
     useEffect(()=>{
         const fetchApplications = async ()=>{
-            const res = await axios.get("http://localhost:8000/jobapplications");
-            
+            const res = await axios.get(`http://localhost:8000/jobapplications?jobid=${jobid}`);
+            setTasks(res.data);
         }
         fetchApplications();
     },[])
 
     const columns = statuses.map(status =>{
-        const taskInColumn = tasks.filter(task=> task.status===status);
+        const taskInColumn = tasks.filter(task=> task.status===status.title);
         return {
-            title: status,
+            statid:status.id,
+            title: status.title,
             tasks: taskInColumn
 
         }
     })
-    
-
-    const handleDrop = (e, targetStatus) => {
+    const handleDrop = (e, targetStatus,statid) => {
         e.preventDefault();
         const id = e.dataTransfer.getData("id");
         const updatedTasks = tasks.map(task => {
           if (task.application_id == id) {
+            const res = axios.post("http://localhost:8000/jobapp/changestatus",{id,statid})
             task.status=targetStatus;
             return task;
           }
@@ -84,9 +53,12 @@ export default function ApplicationsDashboard() {
       
   return (
     
-    <div className='flex divide-x gap-4'>
+    <div className='flex divide-x gap-4 mt-24'>
+        <div className='bg-red-300' onDrop={(e)=>handleDrop(e,"rejected",5)} onDragOver={(e)=>e.preventDefault()}>
+            <h1 className='text-3xl p-2 capitalize font-bold text-red-800'>Reject Application</h1>
+        </div>
         {columns.map(column=>(
-            <div onDrop={(e)=>handleDrop(e,column.title)} onDragOver={(e)=>e.preventDefault()}>
+            <div onDrop={(e)=>handleDrop(e,column.title,column.statid)} onDragOver={(e)=>e.preventDefault()}>
                 <h1 className='text-3xl p-2 capitalize font-bold'>{column.title} {column.tasks.length}</h1>
                 {column.tasks.map(task=>(
                     <Task key={task.application_id}
@@ -97,6 +69,7 @@ export default function ApplicationsDashboard() {
                 ))}
             </div>
         ))}
+        
     </div>
   )
 }

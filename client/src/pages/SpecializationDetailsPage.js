@@ -9,7 +9,6 @@ function SpecializationDetailsPage(){
 
     const [specData,setSpecData] = useState([]);
     const spec = specData[0];
-    console.log(specid)
     useEffect(()=>{
           const fetchSpecData = async ()=>{
                try{
