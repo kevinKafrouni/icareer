@@ -7,6 +7,7 @@ import SearchJob from './pages/SearchJob';
 import SpecializationsPage from './pages/Specializations/SpecializationsPage';
 import SpecializationDetailsPage from './pages/SpecializationDetailsPage';
 import LoginRegister from './pages/authentification/LoginRegister';
+import ManageJobsPage from './pages/recruter/ManageJobsPage';
 function App() {
   return (
     <div className="App">
@@ -18,6 +19,7 @@ function App() {
         <Route path="/specializations/:industry" element={<SpecializationsPage />} />
         <Route path="/specializationdetails/:specid" element={<SpecializationDetailsPage />} />
         <Route path="/auth/:type" element={<LoginRegister />} />
+        <Route path="/applications" element={<ManageJobsPage />}/>
       </Routes>
       
     </div>

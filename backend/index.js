@@ -139,7 +139,7 @@ app.post("/login", (req, res) => {
   });
 
 
-
+/*check if user is logged in*/
   app.get('/checklogin', (req, res) => {
     if (req.session && req.session.user) {
         console.log("yes");
@@ -157,6 +157,36 @@ app.post("/login", (req, res) => {
         res.json({ isLoggedIn: false });
     }
   });
+
+
+  /*get job application possible statuses*/
+
+  app.get('/statuslist',(req,res)=>{
+    const q = "SELECT app_status_id as 'id',app_status_name as 'title' FROM application_status"
+    db.query(q,(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+    })
+  })
+
+  /*get all aplication for a given job */
+
+  app.get('/jobapplications',(req,res)=>{
+    const jobid = 1;
+    const q = "SELECT application_id,first_name,last_name,email,pdf_cv,app_status_name as 'status' FROM job_applications natural join user natural join jobs natural join application_status WHERE job_id=?"
+
+    db.query(q,[jobid],(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+    })
+  })
+
+  /*change an application status  */
+  app.post('/jobapp/changestatus',(req,res)=>{
+    const [appid,status] = req.body;
+    console.log(appid + status);
+    const q = ""
+  })
   
 app.listen(8000,()=>{
     console.log("connected to backend");
