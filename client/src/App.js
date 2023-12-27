@@ -9,6 +9,9 @@ import SpecializationDetailsPage from './pages/SpecializationDetailsPage';
 import LoginRegister from './pages/authentification/LoginRegister';
 import ManageJobsPage from './pages/recruter/ManageJobsPage';
 import ApplicationsDashboard from './pages/recruter/ApplicationsDashboard';
+import UserProfile from './pages/userprofile/UserProfile';
+import PostJob from './pages/recruter/PostJob';
+
 function App() {
   return (
     <div className="App">
@@ -22,6 +25,8 @@ function App() {
         <Route path="/auth/:type" element={<LoginRegister />} />
         <Route path="/applications" element={<ManageJobsPage />}/>
         <Route path='/board/:jobid' element={<ApplicationsDashboard/>}/>
+        <Route path="/profile" element={<UserProfile/>}/>
+        <Route path="/postJob" element={<PostJob/>}/>
       </Routes>
       
     </div>
