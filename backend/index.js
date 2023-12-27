@@ -4,20 +4,8 @@ import cors from "cors"
 import session from "express-session"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
+
 const app = express()
-
-app.use(session({
-    secret:"kevinkey",
-    resave:false,
-    saveUninitialized:false,
-    cookie: {
-        secure: false, 
-        httpOnly: true, 
-        maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 1 day (in milliseconds)
-        sameSite: 'strict', 
-      },
-}))
-
 const db = mysql.createConnection({
     host:"localhost",
     user:"kevin",
@@ -25,9 +13,28 @@ const db = mysql.createConnection({
     database:"icareer"
 })
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+  {
+    origin: ["http://localhost:3000"],
+    methods: ["GET","POST"],
+    credentials: true
+  }
+));
+
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(session({
+  key:"user",
+  secret:"kevinkey",
+  resave:false,
+  saveUninitialized:false,
+  cookie: {
+      expires:60*60*24*1000
+    },
+}))
+
+
 /*working with industries*/
 app.get("/industries",(req,res)=>{
     const industryId = req.query.industryId;
@@ -123,12 +130,10 @@ app.post("/login", (req, res) => {
         const companyQuery = "SELECT company_name,email,company_logo FROM company WHERE email = ? AND password = ? LIMIT 1";
         db.query(companyQuery, [email, password], (companyerr, companydata) => {
           if (companyerr) {
-            console.log(companyerr);
             return res.json(companyerr);
           }
           if (companydata.length === 1) {
             req.session.company = companydata;
-            
             return res.json({ type: "company", companydata });
           } else {
             return res.json(err);
@@ -141,16 +146,20 @@ app.post("/login", (req, res) => {
 
 /*check if user is logged in*/
   app.get('/checklogin', (req, res) => {
-    if (req.session && req.session.user) {
-      const { name, email,logo } = req.session.user;
-      res.json({ isLoggedIn: true,name,email });
-
-    } else if(req.session && req.session.company){
+    if (req.session.user) {
+      const {first_name,last_name,email} = req.session.user[0];
+      let userName = first_name+" "+last_name;
+      return res.json({ isLoggedIn: true,type:"user",name:userName,email:email});
+      
+    } else if(req.session.company){
+      console.log(req.session.company);
+      const {company_name,email,company_logo} = req.session.company[0]
         console.log("comp");
-        const { name, email,logo} = req.session.user;
-        res.json({ isLoggedIn: true,name,email});
+        return res.json({ isLoggedIn: true,type:"company",name:company_name,email:email,logo:company_logo});
     }else{
-        res.json({ isLoggedIn: false });
+      console.log("testelse")
+        return res.json({ isLoggedIn: false });
+        
     }
   });
 
@@ -192,7 +201,7 @@ app.post("/login", (req, res) => {
   /*get the jobs posted by the current loged recruter */
   app.get('/jobsposted',(req,res)=>{
     const recruterid = 1;//get this id from the logged user session
-    const q = "SELECT job_id,job_title,DATE_FORMAT(job_close_date, '%d-%m-%Y') as 'close_date',DATE_FORMAT(job_posted_date, '%d-%m-%Y') as 'post_date',spec_name FROM jobs NATURAL JOIN specialization WHERE company_id=?"
+    const q = "SELECT job_id,job_title,DATE_FORMAT(job_close_date, '%d-%m-%Y') as 'close_date',DATE_FORMAT(job_posted_date, '%d-%m-%Y') as 'post_date',spec_name FROM jobs NATURAL JOIN specialization WHERE company_id=? AND job_close_date > CURRENT_DATE;"
 
     db.query(q,[recruterid],(err,data)=>{
       if(err) return res.json(err)

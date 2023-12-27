@@ -4,15 +4,24 @@ import axios from 'axios';
 import UserIcon from './ui/UserIcon';
 function Navbar(){
 
+    axios.defaults.withCredentials=true;
     const [isLoggedin, setIsLoggedin] = useState(false);
     const [userInfo, setUserInfo] = useState({ name: '', email: '',logo:'' });
+    const [userType,setUserType] = useState('')
     useEffect(() => {
         const checkLoginStatus = async () => {
           try {
             const res = await axios.get('http://localhost:8000/checklogin');
             if (res.data.isLoggedIn) {
               setIsLoggedin(true);
-              setUserInfo({ name: res.data.name, email: res.data.email ,logo:'' });
+              if(res.data.type==="user"){ 
+                setUserType("user");
+              setUserInfo({ name: res.data.name,email: res.data.email ,logo:'' });
+            }else if(res.data.type==="company"){
+              setUserType("company")
+              setUserInfo({name:res.data.name,email:res.data.email,logo:""})
+            }
+              
             } else {
                 setIsLoggedin(false);
             }
@@ -20,9 +29,10 @@ function Navbar(){
             console.error('Error checking login status:', error);
           }
         };
-    
+        
         checkLoginStatus();
       }, []);
+    
     
     return(
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
@@ -38,7 +48,7 @@ function Navbar(){
     </div>
     :
     <UserIcon 
-        name={userInfo.name}
+        name={userInfo.name} 
         email={userInfo.email}
         image="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     />
@@ -48,12 +58,24 @@ function Navbar(){
         <li>
             <Link to="" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Home</Link>
         </li>
+        {isLoggedin && userType==="company"? 
+        <li>
+          <Link to="/postjob" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Post a Job</Link>
+        </li>
+        :
         <li>
             <Link to="/searchjob" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Search Jobs</Link>
         </li>
+        }
+        {isLoggedin && userType==="company"? 
+        <li>
+          <Link to="/applications" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">View jobs Posted</Link>
+        </li>
+        :
         <li>
             <Link to="" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Carrer Path</Link>
         </li>
+        }
         </ul>
     </div>
     </div>
