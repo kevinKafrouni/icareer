@@ -11,6 +11,8 @@ import ManageJobsPage from './pages/recruter/ManageJobsPage';
 import ApplicationsDashboard from './pages/recruter/ApplicationsDashboard';
 import UserProfile from './pages/userprofile/UserProfile';
 import PostJob from './pages/recruter/PostJob';
+import Apply from'./pages/Apply';
+import ProfilePage from './pages/userprofile/UserProfile';
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
         <Route path='/board/:jobid' element={<ApplicationsDashboard/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/postJob" element={<PostJob/>}/>
+        <Route path="/apply" element={<Apply/>}/>
       </Routes>
       
     </div>
