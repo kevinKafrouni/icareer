@@ -208,7 +208,7 @@ app.post("/login", (req, res) => {
 
   /*get the jobs posted by the current loged recruter */
   app.get('/jobsposted',(req,res)=>{
-    const recruterid = 1;//get this id from the logged user session
+    const recruterid = req.session.company[0].company_id;
     const q = "SELECT job_id,job_title,DATE_FORMAT(job_close_date, '%d-%m-%Y') as 'close_date',DATE_FORMAT(job_posted_date, '%d-%m-%Y') as 'post_date',spec_name FROM jobs NATURAL JOIN specialization WHERE company_id=? AND job_close_date > CURRENT_DATE;"
 
     db.query(q,[recruterid],(err,data)=>{
