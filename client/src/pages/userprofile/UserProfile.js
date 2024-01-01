@@ -1,8 +1,5 @@
 import React from 'react';
 import './UserProfile.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 function UserProfile(){
 
 

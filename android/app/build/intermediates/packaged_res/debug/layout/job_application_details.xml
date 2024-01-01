@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- job_application_detail.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Display detailed information about the job application -->
+    <TextView
+        android:id="@+id/applicantNameDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="applicant name"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/applicantEmailDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mail@gmail.com"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/applicantDetails"
+        android:text="here we put the applicant details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date applied : 1/7/2023"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="application status :"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        />
+
+    <Spinner
+        android:id="@+id/statusSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/updateStatusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Status"/>
+
+</LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="gray">#6E6C6C</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">icareers</string>
+    <style name="Base.Theme.Icareers" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.Icareers" parent="Base.Theme.Icareers"/>
+</resources>

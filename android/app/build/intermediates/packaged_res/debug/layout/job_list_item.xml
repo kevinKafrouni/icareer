@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/jobTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Job Title"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/spec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Specialization"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/postdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:text="Date Posted: 2023-12-25"
+            android:layout_marginRight="12dp"/>
+
+        <TextView
+            android:id="@+id/closedate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:text="Date Close: 2023-12-25"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/viewApplicationsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Applications"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:onClick="viewApplications"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/black" />
+
+</LinearLayout>
