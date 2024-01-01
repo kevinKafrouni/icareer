@@ -1,8 +1,6 @@
 function PostJob(){
     return(
         
-
-  
   <main class="main bg-white px-6 md:px-16 py-6">
     <div class="w-full max-w-xl mx-auto">
       <form action="" method="post">

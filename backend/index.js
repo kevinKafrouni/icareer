@@ -55,8 +55,16 @@ app.get("/industries",(req,res)=>{
     }
     
 })
-/*geting the specialization of a given industry*/
+/*get all the specializations ==this is specific for post job element */
+app.get("/getAllSpecs",(req,res)=>{
+  const q = "SELECT spec_id as 'value',spec_name as 'label' FROM specialization";
 
+  db.query(q,(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+  })
+})
+/*geting the specialization of a given industry*/
 app.get("/specs",(req,res)=>{
     const industryId = req.query.industryId;
     const q = "SELECT * FROM specialization WHERE industry_id= ?";
@@ -208,6 +216,79 @@ app.post("/login", (req, res) => {
       return res.json(data);
     })
   })
+
+  
+  /*recruter post a job */
+  app.post("/postjob",(req,res)=>{
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0'); 
+
+    const curdate = `${year}-${month}-${day}`;
+    const jobData = req.body;
+    
+    if(!req.session.company){
+      return res.json("invalid credntials") 
+    }
+    const companyId = req.session.company[0].company_id;
+    jobData.job_posted_date = curdate;
+    jobData.company_id = companyId;
+
+    console.log(jobData);
+    const q = "INSERT INTO jobs set ? ";
+
+    db.query(q,jobData,(err,result)=>{
+      
+      if(err) return res.json(err);
+      return res.json(result);
+    })
+  }) 
+
+
+
+    /*============================ ANDROID specific=========================================*/
+
+    app.post("/androidpostjob",(req,res)=>{
+      const today = new Date();
+      let year = today.getFullYear();
+      let month = String(today.getMonth() + 1).padStart(2, '0');
+      let day = String(today.getDate()).padStart(2, '0'); 
+      const curdate = `${year}-${month}-${day}`;
+  
+      const future = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+      year = future.getFullYear();
+      month = String(future.getMonth() + 1).padStart(2, '0');
+      day = String(future.getDate()).padStart(2, '0'); 
+  
+      const closedate = `${year}-${month}-${day}`; 
+  
+      const jobData = req.body;
+      
+      jobData.job_posted_date = curdate;
+      jobData.company_id = 1;  //replace with loggedin mobile recruter
+      jobData.job_close_date = closedate;
+  
+      console.log(jobData);
+      const q = "INSERT IGNORE INTO jobs set ? ";
+  
+      db.query(q,jobData,(err,result)=>{
+        
+        if(err) console.log(err);
+        console.log(result);
+      })
+    }) 
+  
+    app.get('/androidjobsposted',(req,res)=>{
+      const recruterid = 1;//get this id from the logged user session
+      const q = "SELECT job_id,job_title,DATE_FORMAT(job_close_date, '%d-%m-%Y') as 'close_date',DATE_FORMAT(job_posted_date, '%d-%m-%Y') as 'post_date',spec_name FROM jobs NATURAL JOIN specialization WHERE company_id=? AND job_close_date > CURRENT_DATE;"
+  
+      db.query(q,[recruterid],(err,data)=>{
+        if(err) console.log(err)
+        return res.json(data);
+      })
+    })
   
 app.listen(8000,()=>{
     console.log("connected to backend");

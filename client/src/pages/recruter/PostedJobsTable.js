@@ -47,7 +47,7 @@ export default function PostedJobsTable() {
                 {job.spec_name}
             </td>
             <td scope="row" className="px-6 py-4 font-medium text-blue-700">
-            <Link to={`/Board/${job.job_id}`/*put job id here */}>
+            <Link to={`/Board/${job.job_id}`}>
                 View
                 </Link>
             </td>
