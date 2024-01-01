@@ -135,7 +135,7 @@ app.post("/login", (req, res) => {
         req.session.user = data;
         return res.json({type:"user",data});
       } else {
-        const companyQuery = "SELECT company_name,email,company_logo FROM company WHERE email = ? AND password = ? LIMIT 1";
+        const companyQuery = "SELECT company_id,company_name,email,company_logo FROM company WHERE email = ? AND password = ? LIMIT 1";
         db.query(companyQuery, [email, password], (companyerr, companydata) => {
           if (companyerr) {
             return res.json(companyerr);
@@ -217,7 +217,14 @@ app.post("/login", (req, res) => {
     })
   })
 
+  app.get("/jobtypes",(req,res)=>{
+    const q = "SELECT job_type_id as 'value', job_type_name as 'label' FROM job_type";
   
+    db.query(q,(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+    })
+  })
   /*recruter post a job */
   app.post("/postjob",(req,res)=>{
 
