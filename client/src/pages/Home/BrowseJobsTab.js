@@ -1,13 +1,52 @@
-import {useState } from "react";
+import {useEffect, useState } from "react";
 import JobsGrid from "./JobsGrid";
+import axios from "axios";
 function BrowseJobsTab(){
 
     const [activeTab,setActiveTab] = useState('industry');
 
+    const [industries,setIndustries] = useState([]);
+    const [specs,setSpecs] = useState([]);
+    const [recent,setRecent] = useState([]);
+    const [companies,setCompanies] = useState([]);
+
+    useEffect(()=>{
+        const fetchIndustryList = async ()=>{
+            try{
+            const res = await axios.get('http://localhost:8000/industrieslist');
+            const industrieslist = res.data.map(item => {
+                return {
+                    ...item,
+                    path: `/searchjob/${item.industry_id}`
+                }})
+            setIndustries(industrieslist);
+            }catch(err){
+                console.log(err);
+            }
+        } 
+        fetchIndustryList();
+    },[])
+
+    useEffect(()=>{
+        const fetchRecentJobs = async ()=>{
+            try{
+            const res = await axios.get('http://localhost:8000/recent20jobs');
+            const recentJobs = res.data.map(item => {
+                return {
+                    ...item,
+                    path: `/jobdetails/${item.job_id}`
+                }})
+            setRecent(recentJobs);
+            }catch(err){
+                console.log(err);
+            }
+        } 
+        fetchRecentJobs();
+    },[])
+
     const handleTabClick = (id)=>{
         setActiveTab(id);
     }
-
     return(        
         <div className="w-fill mr-12 ">
         <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -74,65 +113,24 @@ function BrowseJobsTab(){
         <div id="default-tab-content">
             <div className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${activeTab === 'industry' ? '' : 'hidden'}`} id="industry" role="tabpanel" aria-labelledby="industry-tab">
                 {activeTab=="industry" &&<JobsGrid
-                                            list={[ "Information Technology", "Healthcare", "Finance", "Education", "Entertainment", "Automotive", "Retail", "Hospitality", "Telecommunications", "Real Estate", "Agriculture", "Energy", "Manufacturing", "Media", "Biotechnology"]}
+                                            list={industries}
 
                 
                 />}
             </div>
             <div className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${activeTab === 'recent' ? '' : 'hidden'}`} id="recent" role="tabpanel" aria-labelledby="recent-tab">
                 {activeTab=="recent"&&<JobsGrid 
-                                        list={ ["Senior Software Engineer",
-                                        "Marketing Manager",
-                                        "Data Analyst",
-                                        "Customer Support Specialist",
-                                        "Financial Analyst",
-                                        "Graphic Designer",
-                                        "Human Resources Coordinator",
-                                        "Sales Representative",
-                                        "Content Writer",
-                                        "Operations Manager"
-                                      ]}
+                                        list={recent}
                 />}
             </div>
             <div className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${activeTab === 'spec' ? '' : 'hidden'}`} id="spec" role="tabpanel" aria-labelledby="spec-tab">
                 {activeTab=="spec"&&<JobsGrid 
-                                        list={["Web Development",
-                                        "Nursing",
-                                        "Investment Banking",
-                                        "Elementary Education",
-                                        "Film Production",
-                                        "Automotive Engineering",
-                                        "Visual Merchandising",
-                                        "Hotel Management",
-                                        "Network Engineering",
-                                        "Property Management",
-                                        "Agricultural Economics",
-                                        "Renewable Energy",
-                                        "Lean Manufacturing"]}
+                                        list={specs}
                 />}
             </div>
             <div className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${activeTab === 'company' ? '' : 'hidden'}`} id="company" role="tabpanel" aria-labelledby="company-tab">
                 {activeTab=="company"&&<JobsGrid 
-                                         list={["TechNova Solutions",
-                                         "HealthCom Innovations",
-                                         "FinancePlus Group",
-                                         "EduPrime Technologies",
-                                         "EntertainMasters Inc.",
-                                         "AutoVanguard Industries",
-                                         "RetailWorks Co.",
-                                         "HospitaliServe Corp.",
-                                         "TeleCompass Networks",
-                                         "RealEstify Ventures",
-                                         "AgriGrowth Enterprises",
-                                         "EcoEnerGen Inc.",
-                                         "ManuTech Solutions",
-                                         "MediaPulse Studios",
-                                         "BioTechPro Innovations",
-                                         "Global Services Ltd.",
-                                         "InnoTech Innovations",
-                                         "BrightSolutions Co.",
-                                         "NexGen Innovators",
-                                         "VisionCorp Industries"]}
+                                         list={companies}
                 />}
             </div>
         </div>
