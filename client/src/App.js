@@ -11,6 +11,7 @@ import ManageJobsPage from './pages/recruter/ManageJobsPage';
 import ApplicationsDashboard from './pages/recruter/ApplicationsDashboard';
 import UserProfile from './pages/userprofile/UserProfile';
 import PostJob from './pages/recruter/PostJob';
+import JobDetails from './pages/JobDetails';
 function App() {
   return (
     <div className="App">
@@ -26,7 +27,7 @@ function App() {
         <Route path='/board/:jobid' element={<ApplicationsDashboard/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/postJob" element={<PostJob/>}/>
-
+        <Route path="/jobdetails/:jobId" element={<JobDetails/>}/>
       </Routes>
       
     </div>

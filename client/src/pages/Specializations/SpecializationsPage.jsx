@@ -7,7 +7,6 @@ function SpecializationPage(){
     const { industry } = useParams();
     const [industryData,setIndustryData] = useState([])
     const ind = industryData[0]; 
-    console.log(industry)
     useEffect(()=>{
         const fetchIndustyData = async ()=>{
             try{

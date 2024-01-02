@@ -185,8 +185,10 @@ app.post("/login", (req, res) => {
   /*get all aplication for a given job */
 
   app.get('/jobapplications',(req,res)=>{
-    const jobid = req.query.jobid;//get this from the clicked job
-    const q = "SELECT application_id,first_name,last_name,email,pdf_cv,app_status_id,app_status_name as 'status' FROM job_applications natural join user natural join jobs natural join application_status WHERE job_id=?"
+    
+    const jobid = req.query.jobid;
+    console.log("requested" + jobid);
+    const q = "SELECT application_id,first_name,last_name,email,pdf_cv,DATE_FORMAT(application_day, '%d-%m-%Y') as 'application_day',app_status_id,app_status_name as 'status' FROM job_applications natural join user natural join jobs natural join application_status WHERE job_id=?"
 
     db.query(q,[jobid],(err,data)=>{
       if(err) return res.json(err);
@@ -225,6 +227,29 @@ app.post("/login", (req, res) => {
       return res.json(data);
     })
   })
+
+  /*get all jobs  */
+  app.get("/getJobs",(req,res)=>{
+    const jobId = req.query.jobId;
+    console.log(jobId);
+    if(jobId){
+      const q =  "SELECT job_id,job_title,job_description,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location WHERE job_id = ?";
+
+      db.query(q,[jobId],(err,data)=>{
+        if(err) return res.json(err);
+        return res.json(data);
+      })
+    }else{
+    const q = "SELECT job_id,job_title,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location"
+
+    db.query(q,(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+    })
+  }
+  })
+
+
   /*recruter post a job */
   app.post("/postjob",(req,res)=>{
 
@@ -253,6 +278,28 @@ app.post("/login", (req, res) => {
     })
   }) 
 
+
+/* get top companies for a field (sorted by number of jobs posted)*/
+app.get("/topcompanies", (req,res)=>{
+  const specId = req.query.specId;
+  const q = "SELECT COUNT(job_id) as 'nbJobs',company_name,company_logo FROM jobs natural join company WHERE spec_id = ? group by company_id,company_logo order by 'nbJobs' LIMIT 5;"
+
+  db.query(q,[specId],(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data);
+  })
+})
+
+app.get("/latestjobs",(req,res)=>{
+  
+  const specId = req.query.specId;
+
+  const q = "SELECT job_id,job_title,job_description,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location WHERE spec_id=? LIMIT 5";
+  db.query(q,[specId],(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data);
+  })
+})
 
 
     /*============================ ANDROID specific=========================================*/

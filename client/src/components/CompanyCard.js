@@ -15,7 +15,6 @@ function CompanyCard(props) {
                             <a href="">{props.name}</a>
                         </h3>
                         </div>
-                        <p className="mt-1 text-sm text-gray-500">{props.location}</p>
                     </div>
                     <div className="flex flex-1 items-end justify-between text-sm">
                         <p className="text-base font-medium text-gray-900">Jobs : {props.jobs}</p>
