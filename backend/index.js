@@ -55,6 +55,15 @@ app.get("/industries",(req,res)=>{
     }
     
 })
+
+app.get("/industrieslist",(req,res)=>{
+  const q = "SELECT industry_id,industry_name as 'name' FROM  industries";
+
+  db.query(q,(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data);
+  })
+})
 /*get all the specializations ==this is specific for post job element */
 app.get("/getAllSpecs",(req,res)=>{
   const q = "SELECT spec_id as 'value',spec_name as 'label' FROM specialization";
@@ -128,7 +137,7 @@ app.post("/register/company",(req,res)=>{
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
     // Check the provided credentials against the user table in the database
-    const userQuery = "SELECT first_name, last_name, email FROM user WHERE email = ? AND password = ? LIMIT 1";
+    const userQuery = "SELECT user_id,first_name, last_name, email FROM user WHERE email = ? AND password = ? LIMIT 1";
     db.query(userQuery, [email, password], (err, data) => {
       if (err) return res.json(err);
       if (data.length === 1) {
@@ -290,17 +299,56 @@ app.get("/topcompanies", (req,res)=>{
   })
 })
 
+/*get the latest jobs posted fo a specs */
 app.get("/latestjobs",(req,res)=>{
-  
+
   const specId = req.query.specId;
 
-  const q = "SELECT job_id,job_title,job_description,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location WHERE spec_id=? LIMIT 5";
+  const q = "SELECT job_id,job_title,job_description,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location WHERE spec_id=? order by job_posted_date desc LIMIT 5";
   db.query(q,[specId],(err,data)=>{
     if(err) return res.json(err);
     return res.json(data);
   })
 })
 
+/*get the last 20 posted jobs in a 2 element list format */
+app.get("/recent20jobs",(req,res)=>{
+  const q = "SELECT job_id ,job_title as 'name' FROM jobs order by job_posted_date desc  LIMIT 20";
+
+  db.query(q,(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data);
+  })
+})
+
+
+app.post("/sendapplication",(req,res)=>{
+  if(req.session.user){
+
+    const today = new Date();
+    let year = today.getFullYear();
+    let month = String(today.getMonth() + 1).padStart(2, '0');
+    let day = String(today.getDate()).padStart(2, '0'); 
+    const curdate = `${year}-${month}-${day}`;
+
+  const jobId = req.body
+  const q = "INSERT INTO job_applications set ? ";
+
+  const applicationdetails = {
+    application_day: curdate,
+    app_status_id: 1,
+    user_id:req.session.user[0].user_id,
+    job_id:jobId.jobId
+  }
+
+  db.query(q,applicationdetails,(err,result)=>{
+    if(err) return res.json(err);
+    return res.json(result);
+  })
+  }else{
+    return res.json("login");
+  }
+})
 
     /*============================ ANDROID specific=========================================*/
 
@@ -324,7 +372,6 @@ app.get("/latestjobs",(req,res)=>{
       jobData.company_id = 1;  //replace with loggedin mobile recruter
       jobData.job_close_date = closedate;
   
-      console.log(jobData);
       const q = "INSERT IGNORE INTO jobs set ? ";
   
       db.query(q,jobData,(err,result)=>{

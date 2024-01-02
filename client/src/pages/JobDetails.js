@@ -17,6 +17,17 @@ function JobDetails(){
         }
         fetchJob();
     },[])
+
+    const handleApply = ()=>{
+        const postApplication = async ()=>{
+            try{
+                await axios.post(`http://localhost:8000/sendapplication`,{jobId});
+            }catch(err){
+                console.log(err);
+            }
+        }
+        postApplication();
+    }
     return(
         <>
             <div className='w-full  py-20 flex items-center md:px-8 px-2  justify-center flex-col  '>
@@ -54,7 +65,7 @@ function JobDetails(){
                             </div>
                         </div>
                         <div className='flex items-center justify-center'>
-                            <button  className='md:px-6 md:py-3 px-3 py-2 mt-2 md:mt-0 bg-indigo-500 rounded text-base tracking-widest uppercase transition-all duration-700 hover:bg-indigo-900 text-white  '>Apply Position</button>
+                            <button onClick={handleApply} className='md:px-6 md:py-3 px-3 py-2 mt-2 md:mt-0 bg-indigo-500 rounded text-base tracking-widest uppercase transition-all duration-700 hover:bg-indigo-900 text-white  '>Apply Position</button>
                         </div>
                     </div>
                 </div>

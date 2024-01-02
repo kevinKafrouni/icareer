@@ -73,8 +73,8 @@ function SpecializationDetailsPage(){
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Top Companies</h1>
                 <div className="mt-8">
-                          <div className="flow-root">
-                            <ul role="list" className="-my-6 divide-y divide-gray-200">
+                          <div className="flow-root ">
+                            <ul role="list" className="-my-6 divide-y divide-gray-200 flex items-center flex-wrap">
                               {topCompanies.map((company)=>(
                                    <CompanyCard 
                                    logo={company.company_logo}
@@ -89,6 +89,7 @@ function SpecializationDetailsPage(){
            </div>
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Latest Jobs</h1>
+                <div className="flex items-center flex-wrap">
                 {latestJobs.map((job)=>(
                     <JobsCard  
                          key={job.job_id} 
@@ -106,6 +107,7 @@ function SpecializationDetailsPage(){
                 ))
 
                 }
+                </div>
            </div>
            
         </div>
