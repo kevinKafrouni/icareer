@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function JobsGrid(props){
 
     const list = props.list;
@@ -6,7 +8,7 @@ function JobsGrid(props){
             {
                 list.map(item=>{
                     return(
-                        <div>{item}</div>
+                        <Link to={item.path}>{item.name}</Link>
                     )
                 })
             }

@@ -16,8 +16,6 @@ export default function PostedJobsTable() {
     }
     fetchJobs();
   },[])
-
-  console.log(jobs);
   return (
 <div className="overflow-x-auto sm:rounded-lg">
     <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
@@ -47,7 +45,7 @@ export default function PostedJobsTable() {
                 {job.spec_name}
             </td>
             <td scope="row" className="px-6 py-4 font-medium text-blue-700">
-            <Link to={`/Board/${job.job_id}`/*put job id here */}>
+            <Link to={`/Board/${job.job_id}`}>
                 View
                 </Link>
             </td>

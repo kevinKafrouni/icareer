@@ -1,91 +1,55 @@
-import React from 'react';
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBBtn,
-  MDBTypography,
-  MDBIcon
-} from 'mdb-react-ui-kit';
-
+import React, { useState,useEffect } from 'react';
+import JobsCard from '../components/JobsCard';
+import axios from 'axios';
 function SearchJob(){
 
-    return(
-<section className="vh-100" style={{ backgroundColor: '#5f59f7' }}>
-      <MDBContainer className="py-5 h-100">
-        <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol xl="10">
-            <MDBCard className="mb-5" style={{ borderRadius: '15px' }}>
-              <MDBCardBody className="p-4">
-                <MDBTypography tag='h3'>Program Title</MDBTypography>
-                <MDBCardText className="small">
-                  <MDBIcon far icon="star" size="lg" />
-                  <span className="mx-2">|</span> Created by <strong>MDBootstrap</strong> on 11 April , 2021
-                </MDBCardText>
-                <hr className="my-4" />
-                <div className="d-flex justify-content-start align-items-center">
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="cog me-2" /> <span className="text-muted small">settings</span>
-                  </MDBCardText>
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="link ms-4 me-2" /> <span className="text-muted small">program link</span>
-                  </MDBCardText>
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="ellipsis-h ms-4 me-2" /> <span className="text-muted small">program link</span> <span className="ms-3 me-4">|</span>
-                  </MDBCardText>
-                  <a href="#!">
-                    <MDBCardImage
-                      width="35"
-                      src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp"
-                      alt="avatar"
-                      className="rounded-circle me-3"
-                      fluid />
-                  </a>
-                  <MDBBtn outline color="dark" floating size="sm">
-                    <MDBIcon fas icon="plus" />
-                  </MDBBtn>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
+    
 
-            <MDBCard className="mb-5" style={{ borderRadius: '15px' }}>
-              <MDBCardBody className="p-4">
-                <MDBTypography tag='h3'>Company Culture</MDBTypography>
-                <MDBCardText className="small">
-                  <MDBIcon fas icon="star text-warning" size="lg" />
-                  <span className="mx-2">|</span> Public <span className="mx-2">|</span> Updated by <strong>MDBootstrap</strong> on 11 April , 2021
-                </MDBCardText>
-                <hr className="my-4" />
-                <div className="d-flex justify-content-start align-items-center">
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="cog me-2" /> <span className="text-muted small">settings</span>
-                  </MDBCardText>
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="link ms-4 me-2" /> <span className="text-muted small">program link</span>
-                  </MDBCardText>
-                  <MDBCardText className="text-uppercase mb-0">
-                    <MDBIcon fas icon="ellipsis-h ms-4 me-2" /> <span className="text-muted small">program link</span> <span className="ms-3 me-4">|</span>
-                  </MDBCardText>
-                  <a href="#!">
-                    <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar" className="rounded-circle me-1" fluid />
-                    <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-3.webp" alt="avatar" className="rounded-circle me-1" fluid />
-                    <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-4.webp" alt="avatar" className="rounded-circle me-1" fluid />
-                    <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar" className="rounded-circle me-3" fluid />
-                  </a>
-                  <MDBBtn outline color="dark" floating size="sm">
-                    <MDBIcon fas icon="plus" />
-                  </MDBBtn>
+    const [jobs,setJobs] = useState([]);
+
+    useEffect(()=>{
+        const fetchJobs = async ()=>{
+            try{
+                const res = await axios.get(`http://localhost:8000/getJobs`);
+                setJobs(res.data);
+                console.log(jobs);
+            }catch (err){
+                console.log(err);
+            }
+        }
+        fetchJobs();
+    },[])
+
+
+
+
+    return(
+        <>
+            <div className='w-full  py-20 flex items-center md:px-8 px-2  justify-center flex-col'>
+                <h1 className='px-4 mx-2 py-2 uppercase tracking-wider border-b-2 border-b-indigo-600 text-3xl font-semibold'>Available Jobs</h1>
+                <div className='w-full h-full py-4 flex  overflow-y-auto  items-center justify-center flex-wrap'>
+                    {
+                        jobs.map((job) => {
+                            return (
+                                <JobsCard  
+                                        key={job.job_id} 
+                                        id={job.job_id}
+                                        title = {job.job_title}
+                                        company={job.company_name}
+                                        logo={job.company_logo}
+                                        minsal = {job.min_salary}
+                                        maxsal = {job.max_salary}
+                                        closedate = {job.close_date}
+                                        postdate = {job.posted_date}
+                                        location = {job.location_name}
+                                        spec = {job.spec_name}
+                                />
+                            )
+                        }) 
+                    }
                 </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </section>
+            </div>
+        </>
     );
 }
 

@@ -1,14 +1,18 @@
 import { useParams } from "react-router-dom";
 import SkillsList from "../components/SkillsList";
 import Roadmap from "../components/Roadmap";
-import CompaniesList from "../components/CompaniesList";
+import CompanyCard from "../components/CompanyCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import JobsCard from "../components/JobsCard";
 function SpecializationDetailsPage(){
     const { specid } = useParams();
 
     const [specData,setSpecData] = useState([]);
     const spec = specData[0];
+
+    const [topCompanies,setTopCompanies] = useState([]);
+    const [latestJobs,setLatestJobs] = useState([]);
     useEffect(()=>{
           const fetchSpecData = async ()=>{
                try{
@@ -19,7 +23,32 @@ function SpecializationDetailsPage(){
                }
           }
           fetchSpecData();
-    },[])
+    },[]);
+
+    useEffect(()=>{
+     const fetchTopCompanies = async ()=>{
+          try{
+               const res = await axios.get(`http://localhost:8000/topcompanies?specId=${specid}`)
+               setTopCompanies(res.data);
+          }catch(err){
+               console.log(err);
+          }
+     }
+     fetchTopCompanies();
+    },[]);
+
+    useEffect(()=>{
+     const fetchLatestJobs = async ()=>{
+          try{
+               const res = await axios.get(`http://localhost:8000/latestjobs?specId=${specid}`)
+               setLatestJobs(res.data);
+          }catch(err){
+               console.log(err);
+          }
+     }
+     fetchLatestJobs();
+    },[]);
+    console.log(latestJobs);
     return(
         <div>
             <header className="w-2/3  ml-24 mt-24 mb-24">
@@ -43,10 +72,42 @@ function SpecializationDetailsPage(){
            </div>
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Top Companies</h1>
-                <CompaniesList />
+                <div className="mt-8">
+                          <div className="flow-root ">
+                            <ul role="list" className="-my-6 divide-y divide-gray-200 flex items-center flex-wrap">
+                              {topCompanies.map((company)=>(
+                                   <CompanyCard 
+                                   logo={company.company_logo}
+                                   name={company.company_name}
+                                   jobs={company.nbJobs}
+                                   />
+                              ))}
+
+                            </ul>
+                          </div>
+                        </div>
            </div>
            <div className="ml-24 mr-24 mt-24">
                 <h1 className="text-3xl font-semibold mb-8">Latest Jobs</h1>
+                <div className="flex items-center flex-wrap">
+                {latestJobs.map((job)=>(
+                    <JobsCard  
+                         key={job.job_id} 
+                         id={job.job_id}
+                         title = {job.job_title}
+                         company={job.company_name}
+                         logo={job.company_logo}
+                         minsal = {job.min_salary}
+                         maxsal = {job.max_salary}
+                         closedate = {job.close_date}
+                         postdate = {job.posted_date}
+                         location = {job.location_name}
+                         spec = {job.spec_name}
+                     />
+                ))
+
+                }
+                </div>
            </div>
            
         </div>

@@ -11,9 +11,7 @@ import ManageJobsPage from './pages/recruter/ManageJobsPage';
 import ApplicationsDashboard from './pages/recruter/ApplicationsDashboard';
 import UserProfile from './pages/userprofile/UserProfile';
 import PostJob from './pages/recruter/PostJob';
-import Apply from'./pages/Apply';
-import ProfilePage from './pages/userprofile/UserProfile';
-
+import JobDetails from './pages/JobDetails';
 function App() {
   return (
     <div className="App">
@@ -25,11 +23,11 @@ function App() {
         <Route path="/specializations/:industry" element={<SpecializationsPage />} />
         <Route path="/specializationdetails/:specid" element={<SpecializationDetailsPage />} />
         <Route path="/auth/:type" element={<LoginRegister />} />
-        <Route path="/applications" element={<ManageJobsPage />}/>
+        <Route path="/postedjobs" element={<ManageJobsPage />}/>
         <Route path='/board/:jobid' element={<ApplicationsDashboard/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/postJob" element={<PostJob/>}/>
-        <Route path="/apply" element={<Apply/>}/>
+        <Route path="/jobdetails/:jobId" element={<JobDetails/>}/>
       </Routes>
       
     </div>
