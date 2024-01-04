@@ -1,11 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import FormInput from "../../components/ui/FormInput";
 import axios from 'axios'
 function RegisterForm(){
   const navigate = useNavigate();
 
   const [type,setType] = useState('user');
+  const [locations,setLocations] = useState([]);
+  useEffect(()=>{
+    const fetchLocations = async ()=>{
+        try{
+            const res = await axios.get("http://localhost:8000/locations");
+            setLocations(res.data);
+        }catch(err){
+            console.log(err);
+        }
+    }
+    fetchLocations();
+  },[])
 
   const changeType = (type)=>{
     setType(type);
@@ -78,11 +90,7 @@ const inputs =[
         name:"location_id",
         type:"select",
         placeholder:"Your Location",
-        options:[
-          {value:1, label:"beirut"},
-          {value:2, label:"jdeide"},
-          {value:3, label:"jamhour"}
-        ]  
+        options:locations  
       }
 ]
 
@@ -98,8 +106,8 @@ const recruterInputs =[
 },{
   id:2,
   name:"company_logo",
-  type:"file",
-  placeholder:"Company Logo",
+  type:"text",
+  placeholder:"Company Logo url",
 },{
   id:3,
   name:"email",
@@ -125,16 +133,12 @@ const recruterInputs =[
 },{
   id:6,
   name:"location_id",
-  type:"select",
+  type:"searchSelect",
   placeholder:"Your Location",
-  options:[
-    {value:1, label:"beirut"},
-    {value:2, label:"jdeide"},
-    {value:3, label:"jamhour"}
-  ]  
+  options:locations
 }
 ]
-  
+
   const handleChange = (e)=>{
     if(type==="company"){
       if(e.target.type==="file"){

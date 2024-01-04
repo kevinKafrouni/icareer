@@ -93,7 +93,14 @@ app.get("/spec",(req,res)=>{
         return res.json(data)
     })
 })
-
+/*get the locations */
+app.get("/locations",(req,res)=>{
+  const q = "SELECT location_id as 'value',location_name as 'label' FROM location"
+  db.query(q,(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data);
+  })
+})
 /*get skills of a specialization*/
 app.get("/skills",(req,res)=>{
     const specId = req.query.specId;
@@ -136,7 +143,9 @@ app.post("/register/company",(req,res)=>{
 /*check login*/
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
-    // Check the provided credentials against the user table in the database
+
+    console.log("tried to log in email : "+email+"password: "+password);
+    
     const userQuery = "SELECT user_id,first_name, last_name, email FROM user WHERE email = ? AND password = ? LIMIT 1";
     db.query(userQuery, [email, password], (err, data) => {
       if (err) return res.json(err);
@@ -180,6 +189,22 @@ app.post("/login", (req, res) => {
     }
   });
 
+  /*update user info*/
+  app.post("/update/user",(req,res)=>{
+    if(!req.session.user){
+      return res.json("not logged in");
+    }
+    const userData = req.body;
+    const userId =  req.session.user[0].user_id;
+    console.log(userData);
+
+    const q = "UPDATE user SET ? WHERE user_id= ?";
+
+    db.query(q,[userData,userId],(err,result)=>{
+      if(err) return res.json(err)
+      return res.json(result);
+    })
+  })
 
   /*get job application possible statuses*/
 
@@ -349,7 +374,33 @@ app.post("/sendapplication",(req,res)=>{
     return res.json("login");
   }
 })
+/*get user details */
+app.get("/getuserdetails",(req,res)=>{
+  if(req.session.user){
+    const userId = req.session.user[0].user_id;
+    const q="SELECT first_name,last_name,email,pdf_cv,location_id FROM user WHERE user_id = ?";
+    db.query(q,[userId],(err,data)=>{
+      if(err) return res.json(err);
+      return res.json(data);
+    })
+  }else{
+    return res.json("not logged in");
+  }
+})
 
+/*get user job applications */
+app.get("/uapplications",(req,res)=>{
+  if(!req.session.user){
+    return res.json("not logged in");
+  }
+  const userId = req.session.user[0].user_id;
+  const q = "SELECT application_id,DATE_FORMAT(application_day, '%d-%m-%Y') as application_day,job_title,app_status_name as 'status' FROM job_applications natural join jobs natural join application_status WHERE user_id = ? order by application_day desc";
+
+  db.query(q,[userId],(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data)
+  })
+})
     /*============================ ANDROID specific=========================================*/
 
     app.post("/androidpostjob",(req,res)=>{

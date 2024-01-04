@@ -5,6 +5,7 @@ function JobDetails(){
 
     const {jobId} = useParams();
     const [job,setJob] = useState([]);
+    const [visiblePopup,setVisiblePopup] = useState(false);
     const jobdetail = job[0];
     useEffect(()=>{
         const fetchJob = async ()=>{
@@ -21,10 +22,11 @@ function JobDetails(){
     const handleApply = ()=>{
         const postApplication = async ()=>{
             try{
-                await axios.post(`http://localhost:8000/sendapplication`,{jobId});
+               const res =  await axios.post(`http://localhost:8000/sendapplication`,{jobId});
             }catch(err){
                 console.log(err);
             }
+            window.alert("application sent");
         }
         postApplication();
     }
