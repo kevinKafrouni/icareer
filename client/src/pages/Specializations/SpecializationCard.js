@@ -8,13 +8,9 @@ function SpecializationCard(props){
                 <h5 className="mb-2 text-2xl text-center font-bold tracking-tight text-gray-900 dark:text-white">{props.title}</h5>
                 <p className="mb-3 font-normal text-center text-gray-700 dark:text-gray-400">{props.description}</p>
                 <div className="flex flex-row justify-center gap-12 p-4 leading-normal">
-                    <div className="font-normal text-gray-700 dark:text-gray-400">
-                        <p>average growth</p>
-                        <p className="text-center text-green-700">+8%</p>
-                    </div>
                     <div className=" font-normal text-gray-700 dark:text-gray-400">
-                        <p>number of Jobs</p>
-                        <p className="text-center">{props.nbjobs}</p>
+                        <p className="text-xl">number of Jobs</p>
+                        <p className="text-center text-xl">{props.nbjobs}</p>
                     </div>
                 </div>
             </div>
