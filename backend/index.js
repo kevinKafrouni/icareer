@@ -76,7 +76,15 @@ app.get("/getAllSpecs",(req,res)=>{
 /*geting the specialization of a given industry*/
 app.get("/specs",(req,res)=>{
     const industryId = req.query.industryId;
-    const q = "SELECT * FROM specialization WHERE industry_id= ?";
+    const q = `SELECT s.*, COALESCE(j.job_count, 0) AS job_count
+                FROM specialization s
+                LEFT JOIN (
+                    SELECT COUNT(*) AS job_count, spec_id
+                    FROM jobs
+                    GROUP BY spec_id
+                ) j ON s.spec_id = j.spec_id
+                WHERE s.industry_id = ?;
+                `;
 
     db.query(q,[industryId],(err,data)=>{
         if(err) return res.json(err);
@@ -130,10 +138,21 @@ app.post("/register/user",(req,res)=>{
 /*save a company */
 app.post("/register/company",(req,res)=>{
     const companyData = req.body;
+    const company = {
+      company_id:companyData.company_id,
+      company_name:companyData.company_name,
+      company_description:companyData.company_description,
+      company_logo:companyData.company_logo,
+      email:companyData.company_email,
+      password:companyData.company_password,
+      phone_number:companyData.phone_number,
+      location_id:companyData.clocation_id
+    }
     console.log(companyData);
+    console.log(company);
 
     const q="INSERT INTO company set ?";
-    db.query(q,companyData,(err,result)=>{
+    db.query(q,company,(err,result)=>{
         console.log(err);
         if(err) return res.json(err)
         return res.json(result);

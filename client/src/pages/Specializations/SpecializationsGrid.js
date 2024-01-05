@@ -24,7 +24,7 @@ function SpecializationGrid(props){
                 title={spec.spec_name}
                 description={spec.spec_description}
                 image={spec.spec_image}
-                nbjobs="22"
+                nbjobs={spec.job_count}
                 />
             ))}
         </div>
