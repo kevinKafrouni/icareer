@@ -5,7 +5,7 @@ function JobDetails(){
 
     const {jobId} = useParams();
     const [job,setJob] = useState([]);
-    const [visiblePopup,setVisiblePopup] = useState(false);
+    
     const jobdetail = job[0];
     useEffect(()=>{
         const fetchJob = async ()=>{

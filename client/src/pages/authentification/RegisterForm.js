@@ -29,7 +29,7 @@ function RegisterForm(){
       birthday:"",
       email:"",
       pdf_cv:"",
-      location_id:"",
+      location_id:"1",
       password:""
   })
 
@@ -37,12 +37,13 @@ function RegisterForm(){
     company_name:"",
     company_description:"",
     company_logo:"",
-    email:"",
-    password:"",
-    phone_number:""
+    company_email:"",
+    company_password:"",
+    phone_number:"",
+    clocation_id:"1"
   })
 
-
+console.log(recVal);
 const inputs =[
     {
         id:1,
@@ -103,52 +104,45 @@ const recruterInputs =[
     placeholder:"Company Name",
     pattern:"^[A-Za-z0-9]{3,16}$",
     required:true
-},{
-  id:2,
-  name:"company_logo",
-  type:"text",
-  placeholder:"Company Logo url",
-},{
-  id:3,
-  name:"email",
-  type:"email",
-  errmsg:"invalid email",
-  placeholder:"email",
-  required:true
-},{
-  id:4,
-  name:"password",
-  type:"password",
-  errmsg:"password should be 6-20 characters",
-  placeholder:"password",
-  pattern:"^[A-Za-z0-9]{6,20}$",
-  required:true
-},{
-  id:5,
-  name:"phone_number",
-  type:"text",
-  errmsg:"invalid phone_number",
-  placeholder:"phone number",
-  required:true
-},{
-  id:6,
-  name:"location_id",
-  type:"searchSelect",
-  placeholder:"Your Location",
-  options:locations
-}
-]
+  },{
+    id:2,
+    name:"company_logo",
+    type:"text",
+    placeholder:"Company Logo url",
+  },{
+    id:3,
+    name:"company_email",
+    type:"email",
+    errmsg:"invalid email",
+    placeholder:"email",
+    required:true
+  },{
+    id:4,
+    name:"company_password",
+    type:"password",
+    errmsg:"password should be 6-20 characters",
+    placeholder:"password",
+    pattern:"^[A-Za-z0-9]{6,20}$",
+    required:true
+  },{
+    id:5,
+    name:"phone_number",
+    type:"text",
+    errmsg:"invalid phone_number",
+    placeholder:"phone number",
+    required:true
+  },{
+    id:6,
+    name:"clocation_id",
+    type:"select",
+    placeholder:"Your Location",
+    options:locations
+  }
+  ]
 
   const handleChange = (e)=>{
     if(type==="company"){
-      if(e.target.type==="file"){
-        const file = e.target.files[0];
-        const filename = `${Date.now()}-${file.name}`;
-        setRecVal({...recVal,[e.target.name]: filename })
-      }else{
         setRecVal({...recVal,[e.target.name]: e.target.value })
-      }
-      console.log(recVal);
     }else{
       setValues({...values,[e.target.name]: e.target.value })
     }
