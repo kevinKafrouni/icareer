@@ -21,7 +21,7 @@ function ApplicationsTable(){
   console.log(applications);
     return(
         <div className="overflow-x-auto sm:rounded-lg">
-            {applications.length > 0 ?
+            {Array.isArray(applications) && applications.length ?
     <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

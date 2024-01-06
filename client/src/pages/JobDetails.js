@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-function JobDetails(){
-
+function JobDetails(props){
+    const {isLoggedin,userType} = props
     const {jobId} = useParams();
     const [job,setJob] = useState([]);
     
@@ -20,16 +20,22 @@ function JobDetails(){
     },[])
 
     const handleApply = ()=>{
-        const postApplication = async ()=>{
-            try{
-               const res =  await axios.post(`http://localhost:8000/sendapplication`,{jobId});
-            }catch(err){
-                console.log(err);
+        if(!isLoggedin){
+            window.alert("please login to apply");
+        }else if(userType !== "user"){
+            window.alert("please login as a job seeker to apply");
+        }else{    
+            const postApplication = async ()=>{
+                try{
+                const res =  await axios.post(`http://localhost:8000/sendapplication`,{jobId});
+                }catch(err){
+                    console.log(err);
+                }
+                window.alert("application sent");
             }
-            window.alert("application sent");
+            postApplication();
         }
-        postApplication();
-    }
+        }
     return(
         <>
             <div className='w-full  py-20 flex items-center md:px-8 px-2  justify-center flex-col  '>

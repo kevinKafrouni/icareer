@@ -1,39 +1,10 @@
 import {Link} from 'react-router-dom'
-import { useState,useEffect } from 'react';
-import axios from 'axios';
 import UserIcon from './ui/UserIcon';
-function Navbar(){
-
-    axios.defaults.withCredentials=true;
-    const [isLoggedin, setIsLoggedin] = useState(false);
-    const [userInfo, setUserInfo] = useState({ name: '', email: '',logo:'' });
-    const [userType,setUserType] = useState('')
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-          try {
-            const res = await axios.get('http://localhost:8000/checklogin');
-            if (res.data.isLoggedIn) {
-              setIsLoggedin(true);
-              if(res.data.type==="user"){ 
-                setUserType("user");
-              setUserInfo({ name: res.data.name,email: res.data.email ,logo:'' });
-            }else if(res.data.type==="company"){
-              setUserType("company")
-              setUserInfo({name:res.data.name,email:res.data.email,logo:""})
-            }
-              
-            } else {
-                setIsLoggedin(false);
-            }
-          } catch (error) {
-            console.error('Error checking login status:', error);
-          }
-        };
-        
-        checkLoginStatus();
-      }, []);
-    
-    
+function Navbar(props){
+  const {isLoggedin,userInfo,userType} = props
+console.log("login: "+isLoggedin);
+console.log(userInfo);
+console.log(userType);
     return(
     <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -50,7 +21,7 @@ function Navbar(){
     <UserIcon 
         name={userInfo.name} 
         email={userInfo.email}
-        image="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+        image={userInfo.logo}
     />
     }
     <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
