@@ -199,7 +199,6 @@ app.post("/login", (req, res) => {
     } else if(req.session.company){
       console.log(req.session.company);
       const {company_name,email,company_logo} = req.session.company[0]
-        console.log("comp");
         return res.json({ isLoggedIn: true,type:"company",name:company_name,email:email,logo:company_logo});
     }else{
       console.log("testelse")
