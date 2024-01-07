@@ -8,8 +8,8 @@ import bodyParser from "body-parser"
 const app = express()
 const db = mysql.createConnection({
     host:"localhost",
-    user:"kevin",
-    password:"k1772002k",
+    user:"root",
+    password:"youssef",
     database:"icareer"
 })
 app.use(express.json());
