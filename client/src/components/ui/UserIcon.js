@@ -1,12 +1,26 @@
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
 import { useState } from 'react';
+import axios from 'axios';
+
 
 function UserIcon(props){
-
+    const navigate = useNavigate();
     const [profileVisible,setProfileVisible] = useState(false);
 
     const toggleProfile = ()=>{
         setProfileVisible(!profileVisible);
+    }
+
+    const handleLogout = async ()=>{
+        console.log("trying to logout")
+        try{
+            const res = await axios.get("http://localhost:8000/logout");
+           
+            console.log("testing");
+            window.location.reload(true);
+        }catch(err){
+            console.log(err);
+        }
     }
 
     return(
@@ -24,7 +38,7 @@ function UserIcon(props){
                 <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</Link>
             </li>
             <li>
-                <Link to="/auth/login" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+                <button onClick={handleLogout} className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</button>
             </li>
             </ul>
         </div>

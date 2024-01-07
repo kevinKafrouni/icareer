@@ -52,8 +52,10 @@ export default function ApplicationsDashboard() {
       };
       
   return (
-    
-    <div className='flex divide-x gap-4 mt-24'>
+    <>
+    <h1 className="text-center text-3xl mt-24">Job Applicants </h1>
+    <div className='flex divide-x gap-4 mt-8'>
+
         <div className='bg-red-300' onDrop={(e)=>handleDrop(e,"rejected",5)} onDragOver={(e)=>e.preventDefault()}>
             <h1 className='text-3xl p-2 capitalize font-bold text-red-800'>Reject Application</h1>
         </div>
@@ -71,5 +73,6 @@ export default function ApplicationsDashboard() {
         ))}
         
     </div>
+    </>
   )
 }

@@ -8,8 +8,8 @@ import bodyParser from "body-parser"
 const app = express()
 const db = mysql.createConnection({
     host:"localhost",
-    user:"root",
-    password:"youssef",
+    user:"kevin",
+    password:"k1772002k",
     database:"icareer"
 })
 app.use(express.json());
@@ -206,6 +206,16 @@ app.post("/login", (req, res) => {
         
     }
   });
+
+  /* Logout logic */
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+      if (err) {
+          console.log(err);
+          return res.json({ message: "Could not logout" });
+      }
+  });
+});
 
   /*update user info*/
   app.post("/update/user",(req,res)=>{
