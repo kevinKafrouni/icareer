@@ -283,7 +283,7 @@ app.post("/login", (req, res) => {
   /*get all jobs  */
   app.get("/getJobs",(req,res)=>{
     const jobId = req.query.jobId;
-    console.log(jobId);
+    console.log("requested");
     if(jobId){
       const q =  "SELECT job_id,job_title,job_description,DATE_FORMAT(job_posted_date,'%d-%m-%Y') as posted_date,DATE_FORMAT(job_close_date,'%d-%m-%Y') as close_date, min_salary, max_salary, company_name, company_logo, email, location_name, spec_name, job_type_name FROM jobs natural join company natural join specialization natural join job_type natural join location WHERE job_id = ?";
 
@@ -459,6 +459,18 @@ app.get("/uapplications",(req,res)=>{
         return res.json(data);
       })
     })
+
+    /*get user job applications */
+app.get("/androiduserapplications",(req,res)=>{
+  
+  const userId = req.query.userId;
+  const q = "SELECT application_id,DATE_FORMAT(application_day, '%d-%m-%Y') as application_day,job_title,app_status_name as 'status' FROM job_applications natural join jobs natural join application_status WHERE user_id = ? order by application_day desc";
+
+  db.query(q,[userId],(err,data)=>{
+    if(err) return res.json(err);
+    return res.json(data)
+  })
+})
   
 app.listen(8000,()=>{
     console.log("connected to backend");
