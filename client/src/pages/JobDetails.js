@@ -94,11 +94,6 @@ function JobDetails(props){
                         </div>
                     </div>
                 </div>
-                <div className='w-full px-2 md:px-8 mb-2 flex flex-col'>
-                    <h1 className='text-xl font-semibold lg:text-2xl '>Related Jobs</h1>
-                    <div className='md:px-8 px-2 md:mx-4 flex flex-wrap items-center justify-center'>
-                    </div>
-                </div>
             </div>
         </>
     )

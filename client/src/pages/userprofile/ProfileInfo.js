@@ -74,21 +74,28 @@ function ProfileInfo(){
     ]
     
     const handleChange = (e)=>{
-        console.log(e.target);
         setValues({...values,[e.target.name]: e.target.value })
     }
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setValues({ ...values, pdf_cv: file }); 
+    }
 
     const handleSubmit = async (e)=>{
         e.preventDefault();
         try{
-            const res = await axios.post('http://localhost:8000/update/user',values);
+            const res = await axios.post('http://localhost:8000/update/user',values, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }});
             console.log(res);
             window.alert("update success")
           }catch(err){
             console.log(err);
           }
     }
+    console.log(values);
     return (
         <div className="bg-white overflow-hidden shadow rounded-lg border">
         <div className="px-4 py-5 sm:px-6 mt-12">
@@ -97,7 +104,7 @@ function ProfileInfo(){
             </h3>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="sm:divide-y sm:divide-gray-200">
             {inputs.map(input=>{
                 return(
@@ -108,10 +115,16 @@ function ProfileInfo(){
                     </div>
                     </div>
                 )
-
             }
-                )}
+        )}
             </div>
+            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"> 
+                <div className="text-sm font-medium text-gray-500">Upload CV</div>
+                <div className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">                   
+                    <input type="file"  onChange={handleFileChange}/>
+                </div>
+            </div>
+                    
             <div className="text-center md:text-left ml-92">
             <button className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider mb-12" 
                     type="submit"

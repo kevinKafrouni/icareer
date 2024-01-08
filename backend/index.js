@@ -4,6 +4,9 @@ import cors from "cors"
 import session from "express-session"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
+import multer from "multer"
+
+const upload = multer({ dest: 'cv/' });
 
 const app = express()
 const db = mysql.createConnection({
@@ -218,21 +221,26 @@ app.get("/logout", (req, res) => {
 });
 
   /*update user info*/
-  app.post("/update/user",(req,res)=>{
-    if(!req.session.user){
+  app.post("/update/user", upload.single('pdf_cv'), (req, res) => {
+    if (!req.session.user) {
       return res.json("not logged in");
     }
+    
     const userData = req.body;
-    const userId =  req.session.user[0].user_id;
+    const userId = req.session.user[0].user_id;
+    if (req.file) {
+      console.log(req.file);
+      userData.pdf_cv = req.file.filename; 
+    }
     console.log(userData);
-
-    const q = "UPDATE user SET ? WHERE user_id= ?";
-
-    db.query(q,[userData,userId],(err,result)=>{
-      if(err) return res.json(err)
+    const q = "UPDATE user SET ? WHERE user_id = ?";
+  
+    db.query(q, [userData, userId], (err, result) => {
+      if (err) return res.json(err);
       return res.json(result);
-    })
-  })
+    });
+  });
+  
 
   /*get job application possible statuses*/
 
