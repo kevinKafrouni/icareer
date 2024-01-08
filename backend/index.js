@@ -5,10 +5,23 @@ import session from "express-session"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import multer from "multer"
-
-const upload = multer({ dest: 'cv/' });
+import path from "path"
 
 const app = express()
+const storage = multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null,'cv')
+  },
+  filename: (req,file,db)=>{
+    db(null,file.fieldname + "_"+Date.now()+path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage
+})
+
+
 const db = mysql.createConnection({
     host:"localhost",
     user:"kevin",
@@ -26,7 +39,7 @@ app.use(cors(
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
-
+app.use(express.static('cv'))
 app.use(session({
   key:"user",
   secret:"kevinkey",
@@ -205,8 +218,7 @@ app.post("/login", (req, res) => {
         return res.json({ isLoggedIn: true,type:"company",name:company_name,email:email,logo:company_logo});
     }else{
       console.log("testelse")
-        return res.json({ isLoggedIn: false });
-        
+        return res.json({ isLoggedIn: false });  
     }
   });
 
